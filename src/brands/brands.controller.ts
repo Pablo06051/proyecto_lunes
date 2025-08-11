@@ -1,19 +1,26 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-
+import { BrandsService } from './brands.service';
 
 @Controller('brands')
 export class BrandsController {
+
+
+
+  //inyeccion de dependencias
+  //inyectar un componente para uso en otro
+  //sin tener que instanciarlo
+   constructor(private readonly brandsService: BrandsService) {}
   
 
   @Post()
-  create() {
-    return "aqui se va a generar las brands";
+  create(@Body() body) {
+    return this.brandsService.create(body)
   }
 
   @Get()
   findAll() {
-    return `aqui se van a consultar todas
-            las brands`;
+    return this.brandsService.findAll();
+    //return "aqui se van a listar las brands";
 
   }
 
@@ -22,9 +29,7 @@ export class BrandsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return `aqui se consulta la 
-    brand cuyo id es:
-    ${id}`;
+    return this.brandsService.findOne(+id);
   }
 
     @Patch(':id')
@@ -35,7 +40,9 @@ export class BrandsController {
   
     @Delete(':id')
     remove(@Param('id') id: string) {
-      return "aqui se borrara" +
-              "la brand con id: " + id;
+     return {
+      "success" : true,
+      "mensaje" : this.brandsService.remove(+id)
+     }
     }
   }
